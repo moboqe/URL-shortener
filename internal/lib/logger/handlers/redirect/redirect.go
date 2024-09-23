@@ -1,0 +1,5 @@
+package redirect
+
+func redirect() {
+
+}
