@@ -1,5 +1,0 @@
-package redirect
-
-func redirect() {
-
-}
