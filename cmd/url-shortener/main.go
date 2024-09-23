@@ -2,12 +2,14 @@ package main
 
 import (
 	"log/slog"
+	"net/http"
 	"os"
-	"url_shortener/internal/config"
-	cmwLogger "url_shortener/internal/http-server/middleware/logger"
-	"url_shortener/internal/lib/logger/handlers/slogpretty"
-	"url_shortener/internal/lib/logger/sl"
-	"url_shortener/internal/storage/sqlite"
+	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/handlers/url/save"
+	cmwLogger "url-shortener/internal/http-server/middleware/logger"
+	"url-shortener/internal/lib/logger/handlers/slogpretty"
+	"url-shortener/internal/lib/logger/sl"
+	"url-shortener/internal/storage/sqlite"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -24,7 +26,7 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 
-	log.Info("starting URL_shortener", slog.String("env", cfg.Env))
+	log.Info("starting url-shortener", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
 
 	storage, err := sqlite.New(cfg.StoragePath)
@@ -44,7 +46,23 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 
-	// TODO: run server
+	router.Post("/url", save.New(log, storage))
+
+	log.Info("starting server", slog.String("address", cfg.Address))
+
+	srv := &http.Server{
+		Addr:         cfg.Address,
+		Handler:      router,
+		ReadTimeout:  cfg.HttpServer.Timeout,
+		WriteTimeout: cfg.HttpServer.Timeout,
+		IdleTimeout:  cfg.IdleTimeout,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
+		log.Error("failed to run server")
+	}
+
+	log.Error("server stopped")
 
 }
 
