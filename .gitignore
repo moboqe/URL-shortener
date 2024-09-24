@@ -2,3 +2,5 @@
 /*Db.*
 storage/storage.db
 coverage.out
+.vscode/*
+.vscode/settings.json
