@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: admin@45.151.30.204
-      DEPLOY_DIRECTORY: /admin/apps/url-shortener
-      CONFIG_PATH: /admin/apps/url-shortener/config/prod.yaml
-      ENV_FILE_PATH: /admin/apps/url-shortener/config.env
+      DEPLOY_DIRECTORY: /root/apps/url-shortener
+      CONFIG_PATH: /root/apps/url-shortener/config/prod.yaml
+      ENV_FILE_PATH: /root/apps/url-shortener/config.env
 
     steps:
       - name: Checkout repository
