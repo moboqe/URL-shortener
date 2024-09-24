@@ -11,12 +11,14 @@ import (
 type Config struct {
 	Env         string `yaml:"env" env:"ENV" env-default:"local"`
 	StoragePath string `yaml:"storage_path" env-required:"true"`
-	HttpServer  `yaml:"http_server"`
+	HTTPServer  `yaml:"http_server"`
 }
-type HttpServer struct {
+type HTTPServer struct {
 	Address     string        `yaml:"address" env-default:"localhost:8081" env-required:"true"`
 	Timeout     time.Duration `yaml:"timeout" env-default:"6s" env-required:"true"`
 	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s" env-required:"true"`
+	User        string        `yaml:"user" env-required:"true"`
+	Password    string        `yaml:"password" env-required:"true" env:"HTTP_SERVER_PASSWORD"`
 }
 
 func MustLoad() *Config {
