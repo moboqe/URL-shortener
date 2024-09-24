@@ -10,10 +10,11 @@ import (
 
 	"url-shortener/internal/http-server/handlers/redirect"
 	"url-shortener/internal/http-server/handlers/redirect/mocks"
+	"url-shortener/internal/lib/api"
 	"url-shortener/internal/lib/logger/handlers/slogdiscard"
 )
 
-func TestSaveHandler(t *testing.T) {
+func TestRedirectHandler(t *testing.T) {
 	cases := []struct {
 		name      string
 		alias     string
