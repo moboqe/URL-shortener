@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: admin@45.151.30.204
-      DEPLOY_DIRECTORY: /root/apps/url-shortener
-      CONFIG_PATH: /root/apps/url-shortener/config/prod.yaml
-      ENV_FILE_PATH: /root/apps/url-shortener/config.env
+      DEPLOY_DIRECTORY: apps/url-shortener
+      CONFIG_PATH: apps/url-shortener/config/prod.yaml
+      ENV_FILE_PATH: apps/url-shortener/config.env
 
     steps:
       - name: Checkout repository
@@ -65,4 +65,4 @@ jobs:
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo mv /tmp/url-shortener.service /etc/systemd/system/url-shortener.service"
       - name: Start application
         run: |
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo systemctl daemon-reload && sudo systemctl restart url-shortener.service"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo su && sudo systemctl daemon-reload && sudo systemctl restart url-shortener.service"
