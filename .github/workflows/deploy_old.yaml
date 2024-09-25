@@ -1,4 +1,4 @@
-name: Deploy App
+name: Deploy App Old Version
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      HOST: root@5.189.237.115
+      HOST: root@45.132.17.158
       DEPLOY_DIRECTORY: /root/apps/url-shortener
       CONFIG_PATH: /root/apps/url-shortener/config/prod.yaml
       ENV_FILE_PATH: /root/apps/url-shortener/config.env
