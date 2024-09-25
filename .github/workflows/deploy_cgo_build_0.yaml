@@ -1,4 +1,4 @@
-name: Deploy App v2
+name: Deploy App v2 With CGO_ENABLED=0
 
 on:
   workflow_dispatch:
