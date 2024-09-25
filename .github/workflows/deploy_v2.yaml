@@ -1,4 +1,4 @@
-name: Deploy App
+name: Deploy App v2
 
 on:
   workflow_dispatch:
@@ -11,10 +11,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      HOST: admin@45.132.17.158
-      DEPLOY_DIRECTORY: apps/url-shortener
-      CONFIG_PATH: apps/url-shortener/config/prod.yaml
-      ENV_FILE_PATH: apps/url-shortener/config.env
+      HOST: root@45.132.17.158
+      DEPLOY_DIRECTORY: /root/apps/url-shortener
+      CONFIG_PATH: /root/apps/url-shortener/config/prod.yaml
+      ENV_FILE_PATH: /root/apps/url-shortener/config.env
 
     steps:
       - name: Checkout repository
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.23.1
+          go-version: 1.20.2
       - name: Build app
         run: |
           go mod download
@@ -41,13 +41,13 @@ jobs:
           sudo apt-get install -y ssh rsync
           echo "$DEPLOY_SSH_KEY" > deploy_key.pem
           chmod 600 deploy_key.pem
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./ ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Remove old systemd service file
         run: |
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo rm -f /etc/systemd/system/url-shortener.service"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "rm -f /etc/systemd/system/url-shortener.service"
       - name: List workspace contents
         run: |
           echo "Listing deployment folder contents:"
@@ -62,7 +62,7 @@ jobs:
       - name: Copy systemd service file
         run: |
           scp -i deploy_key.pem -o StrictHostKeyChecking=no ${{ github.workspace }}/deployment/url-shortener.service ${{ env.HOST }}:/tmp/url-shortener.service
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo mv /tmp/url-shortener.service /etc/systemd/system/url-shortener.service"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv /tmp/url-shortener.service /etc/systemd/system/url-shortener.service"
       - name: Start application
         run: |
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "sudo su && sudo systemctl daemon-reload && sudo systemctl restart url-shortener.service"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "systemctl daemon-reload && systemctl restart url-shortener.service"
