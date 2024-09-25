@@ -3,7 +3,7 @@ Description=Url Shortener
 After=network.target
 
 [Service]
-User=root
+User=admin
 WorkingDirectory=apps/url-shortener
 ExecStart=url-shortener/url-shortener
 Restart=always
