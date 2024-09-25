@@ -4,7 +4,7 @@ on:
   push:
     branches:
      - 'old_version'
-     
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,17 +15,6 @@ jobs:
       ENV_FILE_PATH: /root/apps/url-shortener/config.env
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.tag }}
-      - name: Check if tag exists
-        run: |
-          git fetch --all --tags
-          if ! git tag | grep -q "^${{ github.event.inputs.tag }}$"; then
-            echo "error: Tag '${{ github.event.inputs.tag }}' not found"
-            exit 1
-          fi
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
